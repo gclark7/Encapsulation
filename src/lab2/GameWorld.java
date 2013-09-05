@@ -10,10 +10,10 @@ package lab2;
  */
 public class GameWorld {
     
-    GameCharacter playerCharacter;
-    GameCharacter aiCharacter;
-    Game level;
-    String mapName;
+    private GameCharacter playerCharacter;
+    private GameCharacter aiCharacter;
+    private Game level;
+    private String mapName;
     
     //constructor
     public GameWorld(String characterType, String playerName, String mapName){
@@ -64,8 +64,16 @@ public class GameWorld {
         this.mapName = mapName;
     }
     
+    public GameCharacter getPlayerCharacter(){
+        return playerCharacter;
+    }
+    public GameCharacter getAiCharacter(){
+        return aiCharacter;
+    }
     
-    
+    public Game getLevel(){
+        return level;
+    }
     
     public static enum MAP{LEVEL_1,LEVEL_2,LEVEL_3};
     

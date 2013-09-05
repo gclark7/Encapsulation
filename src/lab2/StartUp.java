@@ -13,22 +13,27 @@ public class StartUp {
     
     public static void main(String[] args) {
         
-        GUI playerHUD;
-        
-        
-        
-        
-        playerHUD=new GUI();//initial startup window
+        GUI playerHUD=new GUI();//initial startup window
         
         do{
-            //sit in an endless loop waiting for user to push start
-            
+            //sits in an endless loop waiting for user to push start
+            //push start already...
+            System.out.println("NOT ready");
         }while(!playerHUD.isGameReady());
             
        //Oh user is finally ready
-        
-        //launch the game
+       //launch the game
         playerHUD.launchGame();
+        
+        //game play is controlled from GameWorld and interacts with GUI
+        //Game defines game activity and how it affects characters
+        //GameCharacter data is displayed on the GUI, methods are called from GameWorld & Game
+        
+        //add some information
+        
+        //trying to add info...
+            playerHUD.updateInitialHUD();
+            playerHUD.repaint();
     }
     
 }
