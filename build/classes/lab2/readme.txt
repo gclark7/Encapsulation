@@ -22,7 +22,9 @@ Provide at least 3 properties for each class, except for class #5.
 
 Provide at least 3 methods for for each class, except for class #5. For class 5
 you just need a main method. Make sure at least two of the methnods for classes
-1-4 are to be completed in a specific order. Make sure at least
+1-4 are to be completed in a specific order. 
+
+Make sure at least
 one method has one or more method parameters. To save time, you can just
 put comments where code inside the method would go for complex operations,
 such as validation logic.
