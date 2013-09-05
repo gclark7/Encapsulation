@@ -39,3 +39,12 @@ things correctly, ask your instructor to review your code on screen. (Time
 permitting). Should we run out of time, please print out the source code and
 hand in at our next class. Make sure your name, course, date and "Lab2" are 
 indicated in a comment at the top of the first page.
+
+
+
+/* LAB 3 ERROR checking
+ *  original configuration it was Line 280ish compare null before checking for 0 length String - text value from Window txt
+ *  What happens when you want to take info from a file, everything is hard coded for JFrame?
+ *  
+ * 
+ */
