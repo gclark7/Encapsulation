@@ -10,4 +10,63 @@ package lab2;
  */
 public class GameWorld {
     
+    GameCharacter playerCharacter;
+    GameCharacter aiCharacter;
+    Game level;
+    String mapName;
+    
+    //constructor
+    public GameWorld(String characterType, String playerName, String mapName){
+        
+        playerCharacter = new GameCharacter(characterType, playerName, 50, 5);
+        aiCharacter = new GameCharacter("RomanCenturian", "Spike", 60,4);
+
+        level= new Game(mapName, false);
+        setMapName(mapName);
+    }
+    
+    public void playTheGame(){
+        
+        while(level.isGameOn())
+        {
+            //do everything here that would produce a fun gaming environment
+            //call methods that build the map
+            
+            //call As NEEDED...Level advancement
+            buildMap(getMapName());
+            
+           
+        }
+        
+    
+        
+    }
+    
+    private void buildMap(String mapName){
+        //check mapName against String comparison of MAP{} values
+        //set a boolean value false until map is approved
+        for(MAP m:MAP.values()){
+            //compare here mapName==m.toString();
+        }
+        
+        //if(!goodMap){
+        //throw an error and start back at GUI
+        //}
+    }
+    
+    
+    //setters & getters
+    public String getMapName() {
+        return mapName;
+    }
+
+    public void setMapName(String mapName) {
+        this.mapName = mapName;
+    }
+    
+    
+    
+    
+    public static enum MAP{LEVEL_1,LEVEL_2,LEVEL_3};
+    
 }

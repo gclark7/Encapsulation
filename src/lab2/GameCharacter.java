@@ -25,17 +25,17 @@ public class GameCharacter {
     }
 
     public GameCharacter(String characterType, String characterName, int strength, int speed) {
-        this.characterType = characterType;
-        this.characterName = characterName;
-        this.strength = strength;//used as strength and health
-        this.speed = speed;
+        setCharacterType(characterType);
+        setCharacterName(characterName);
+        setStrength(strength,true);//used as strength and health
+        setSpeed(speed);
                
     }
     
     //incrimental methods
-    public void monitorCharacter(){//runs monitor methods
+    public final void monitorCharacter(){//runs monitor methods
         reportCharacterStatus();//would update a dialog box for GUI
-       
+        
     }
     
     //method 1
@@ -57,11 +57,13 @@ public class GameCharacter {
         return status;
     }
     
-    public void hurtCharacter(int x){
+    
+    
+    private void hurtCharacter(int x){
         strength-=x;
     }
     
-    public void healCharacter(int x){
+    private void healCharacter(int x){
         strength+=x;
     }
     
@@ -78,6 +80,8 @@ public class GameCharacter {
     }
 
     public void setCharacterType(String characterType) {
+        //perform error checking
+        //check null string, no string, 0 length
         this.characterType = characterType;
     }
 
@@ -86,6 +90,8 @@ public class GameCharacter {
     }
 
     public void setCharacterName(String characterName) {
+        //perform error checking
+        //check null string, no string, 0 length
         this.characterName = characterName;
     }
 
@@ -93,8 +99,13 @@ public class GameCharacter {
         return strength;
     }
 
-    public void setStrength(int strength) {
-        this.strength = strength;
+    public final void setStrength(int strength, boolean heal) {//adjusts player strength 
+        //perform error checking
+        //no negative values
+        
+        if(heal){
+            healCharacter(strength);
+        }else{hurtCharacter(strength);}
     }
 
     public int getSpeed() {
@@ -102,6 +113,8 @@ public class GameCharacter {
     }
 
     public void setSpeed(int speed) {
+         //perform error checking
+        //no negative values
         this.speed = speed;
     }
 
@@ -110,6 +123,8 @@ public class GameCharacter {
     }
 
     public void setPoints(int points) {
+         //perform error checking
+        //no negative values
         this.points = points;
     }
     
