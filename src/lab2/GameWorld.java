@@ -9,7 +9,7 @@ package lab2;
  * @author gcDataTechnology
  */
 public class GameWorld {
-    
+    private final int GREAT_HEALTH = 50;
     private GameCharacter playerCharacter;
     private GameCharacter aiCharacter;
     private Game level;

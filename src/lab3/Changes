@@ -1,0 +1,33 @@
+/* LAB 3 ERROR checking
+ *  original configuration it was Line 280ish compare null before checking for 0 length String - text value from Window txt
+ *  What happens when you want to take info from a file, everything is hard coded for JFrame?
+ *  Delegate Tasks to Individual Classes
+ *  Build Encapsulated Classes
+ *  Incorporate inherited concepts
+ */
+
+
+--Strategy
+    Develop Separate Classes to perform specified duties
+        GUI --> Builds the GUI and assigns button function methods
+            Button function will call methods from a governing Class
+        
+        SortData --> Defines methods to sort the data
+            Methods will be called from GUI buttons
+            Methods will use getters from StoreData
+
+        StoreData --> Stores data & values from GUI
+            Public methods for getters & setters
+            Methods will be called from GUI & from SortData
+
+        SearchData --> Defines methods to search data values 
+            Methods produce search results from the StoreData Class getters
+
+
+        Perhaps build a GUI ErrorClass --> Handles application specific error handling 
+            Methods would ensure data integrity
+                Check user values
+                Ensure partNumber formatting
+                Check all fields are filled out
+                
+            

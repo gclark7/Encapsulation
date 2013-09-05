@@ -101,7 +101,7 @@ public class Employee {
     
     
     
-    
+    //Runs the steps in order
     public void introduceEmployee(){
         
         meetWithHrForBenefitAndSalryInfo();

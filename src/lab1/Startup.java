@@ -21,7 +21,7 @@ public class Startup {
         employee.reviewDeptPolicies();
         */
         
-        employee.introduceEmployee();
+        employee.introduceEmployee();//new method to run above steps in order
         
 
         System.out.println("The employee's status is: " + employee.getStatus());

@@ -20,29 +20,19 @@ import javax.swing.*;
  * @version     1.00
 */
 
-public class MainGUI extends javax.swing.JFrame implements ActionListener {
-    
-    
-    private final String ERR_NUM_MSG="Sorry, the price entry must be a whole or floating point number only.\n";
-    private final String ERR_NUM_TITLE="Number Format Error";
-    private final String ERR_ALL_FIELDS="Sorry, you must complete all fields. Please try again.";
-    private final String ERR_ALL_FIELDS_TITLE="Incomplete Part Entry";
-    private final String ERR_MAX_ITEM_MSG="Sorry, you have reach the maximum of 10 items.\n"
-                    + "No more items can be saved.";
-    private final String ERR_MAX_ITEM_TITLE="Maximum Reached";
-    private String partNo;
-    
+public class MainGUI_Original extends javax.swing.JFrame implements ActionListener {
+    private final int MAX_RECS = 10;
+    private final int NOT_FOUND = -1;
+
+    String partNo;
+    int foundIndex = NOT_FOUND;
     private String partDesc;
-    private double partPrice;
-    private DataStore dataStore;
-    private DataSorter dataSorter;
-    private DataSearcher dataSearcher;
-    
+    double partPrice;
 
     
 
     /** Creates new form MainGUI */
-    public MainGUI() {
+    public MainGUI_Original() {
         initComponents();
         this.txtNewProdNo.requestFocus();
     }
@@ -83,7 +73,7 @@ public class MainGUI extends javax.swing.JFrame implements ActionListener {
         setTitle("ACME Hardware Product Manager");
         setResizable(false);
 
-        jLabel1.setFont(new java.awt.Font("Tahoma", 1, 18));
+        jLabel1.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         jLabel1.setText("ACME Hardware");
 
         txtNewProdNo.setNextFocusableComponent(txtNewProdDesc);
@@ -169,9 +159,8 @@ public class MainGUI extends javax.swing.JFrame implements ActionListener {
                                         .addComponent(jLabel4)
                                         .addComponent(txtNewProdPrice, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE))
                                     .addGap(29, 29, 29)
-                                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 429, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED))))
-                        .addContainerGap(68, Short.MAX_VALUE))
+                                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 429, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
@@ -248,50 +237,55 @@ public class MainGUI extends javax.swing.JFrame implements ActionListener {
 
     public void actionPerformed(java.awt.event.ActionEvent evt) {
         if (evt.getSource() == btnEnterRecord) {
-            MainGUI.this.btnEnterRecordActionPerformed(evt);
+            MainGUI_Original.this.btnEnterRecordActionPerformed(evt);
         }
         else if (evt.getSource() == btnDisplayList) {
-            MainGUI.this.btnDisplayListActionPerformed(evt);
-        }
-        else if (evt.getSource() == btnSearch) {
-            MainGUI.this.btnSearchActionPerformed(evt);
-        }
-        else if (evt.getSource() == btnUpdate) {
-            MainGUI.this.btnUpdateActionPerformed(evt);
+            MainGUI_Original.this.btnDisplayListActionPerformed(evt);
         }
         else if (evt.getSource() == btnSortList) {
-            MainGUI.this.btnSortListActionPerformed(evt);
+            MainGUI_Original.this.btnSortListActionPerformed(evt);
+        }
+        else if (evt.getSource() == btnSearch) {
+            MainGUI_Original.this.btnSearchActionPerformed(evt);
+        }
+        else if (evt.getSource() == btnUpdate) {
+            MainGUI_Original.this.btnUpdateActionPerformed(evt);
         }
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnEnterRecordActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEnterRecordActionPerformed
-        
+        foundIndex = NOT_FOUND;
+
         partNo = this.txtNewProdNo.getText();
         partDesc = this.txtNewProdDesc.getText();
         try {
             partPrice = Double.parseDouble(this.txtNewProdPrice.getText());
         } catch(Exception e) {
             JOptionPane.showMessageDialog(this,
-                    ERR_NUM_MSG,ERR_NUM_TITLE, JOptionPane.WARNING_MESSAGE);
+                    "Sorry, the price entry must be a whole or floating point number only.\n",
+                    "Number Format Error", JOptionPane.WARNING_MESSAGE);
             return;
         }
-        //use DataStore method for checking data store
-       if (partNo.length() == 0 || partDesc.length() == 0 
+
+        if (emptyRow > 10) {
+            JOptionPane.showMessageDialog(this, 
+                    "Sorry, you have reach the maximum of 10 items.\n"
+                    + "No more items can be saved.", "Maximum Reached", JOptionPane.WARNING_MESSAGE);
+
+        } else if (partNo.length() == 0 || partDesc.length() == 0 
                 || this.txtNewProdPrice.getText().length() == 0)
         {
             JOptionPane.showMessageDialog(this, 
-                    ERR_ALL_FIELDS, ERR_ALL_FIELDS_TITLE, JOptionPane.WARNING_MESSAGE);
+                    "Sorry, you must complete all fields. Please try again.",
+                    "Incomplete Part Entry", JOptionPane.WARNING_MESSAGE);
             this.txtNewProdNo.requestFocus();
 
-        } else if(!dataStore.isDataFull()){
-             //changed to getter method 9/5/2013
-            JOptionPane.showMessageDialog(this, 
-                    ERR_MAX_ITEM_MSG, ERR_MAX_ITEM_TITLE, JOptionPane.WARNING_MESSAGE);
-
         } else {
-            //call DataStore method setters -- Single method to mutliple setters
-            dataStore.setRecord(partNo,partDesc,Double.toString(partPrice));
-           
+            //call DataStore method setters -- Single method
+            partNums[emptyRow] = partNo;
+            partDescs[emptyRow] = partDesc;
+            partPrices[emptyRow] = partPrice;
+            this.emptyRow += 1;
         }
 
         clearEntryFields();
@@ -301,14 +295,14 @@ public class MainGUI extends javax.swing.JFrame implements ActionListener {
 
     private void btnSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSearchActionPerformed
         String searchNum = txtSearchPartNo.getText();
-        if (searchNum != null && searchNum.length() > 0) {//keep the check here per Jim L.
-            for (int i = 0; i < this.partNums.length; i++) {//move this to DataSearcher, use method call here
+        if (searchNum != null && searchNum.length() > 0) {
+            for (int i = 0; i < this.partNums.length; i++) {
                 if (searchNum.equalsIgnoreCase(partNums[i])) {
                     foundIndex = i;
                     break;
                 }
             }
-           if (foundIndex == NOT_FOUND) {//call to this method
+           if (foundIndex == NOT_FOUND) {
                 JOptionPane.showMessageDialog(this,
                     "Part Number not found. Please try again.",
                     "Not Found", JOptionPane.WARNING_MESSAGE);
@@ -317,7 +311,7 @@ public class MainGUI extends javax.swing.JFrame implements ActionListener {
                 txtCurDesc.setText(partDescs[foundIndex]);
                 txtCurPrice.setText("" + partPrices[foundIndex]);
            }
-        } else {//Messages are okay for GUI per Jim L.
+        } else {
                 JOptionPane.showMessageDialog(this,
                     "Please enter a Part No. to search",
                     "Entry Missing", JOptionPane.WARNING_MESSAGE);
