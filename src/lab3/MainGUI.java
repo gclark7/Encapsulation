@@ -29,7 +29,12 @@ public class MainGUI extends javax.swing.JFrame implements ActionListener {
     private final String ERR_ALL_FIELDS_TITLE="Incomplete Part Entry";
     private final String ERR_MAX_ITEM_MSG="Sorry, you have reach the maximum of 10 items.\n"
                     + "No more items can be saved.";
+    private final String ERR_NUM_NOTFOUND_MSG="Part Number not found. Please try again.";
     private final String ERR_MAX_ITEM_TITLE="Maximum Reached";
+    private final String ERR_NOTFOUND_TITLE="Not Found";
+    private final String ERR_ENTER_VALUE="Please enter a Part No. to search";
+    private final String ERR_ENTERVALUE_TITLE="Entry Missing";
+    
     private String partNo;
     
     private String partDesc;
@@ -45,6 +50,9 @@ public class MainGUI extends javax.swing.JFrame implements ActionListener {
     public MainGUI() {
         initComponents();
         this.txtNewProdNo.requestFocus();
+        dataStore =new DataStore();
+        dataSorter=new DataSorter();
+        dataSearcher=new DataSearcher();
     }
 
     /** This method is called from within the constructor to
@@ -301,26 +309,40 @@ public class MainGUI extends javax.swing.JFrame implements ActionListener {
 
     private void btnSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSearchActionPerformed
         String searchNum = txtSearchPartNo.getText();
+        int foundIndex=-1;
+        int REC_SIZE=3;
+        int DEC_INDEX = 1;
+        int PRICE_INDEX=2;
+        String[] recordData=new String[REC_SIZE];
+        
         if (searchNum != null && searchNum.length() > 0) {//keep the check here per Jim L.
-            for (int i = 0; i < this.partNums.length; i++) {//move this to DataSearcher, use method call here
-                if (searchNum.equalsIgnoreCase(partNums[i])) {
-                    foundIndex = i;
-                    break;
-                }
-            }
-           if (foundIndex == NOT_FOUND) {//call to this method
-                JOptionPane.showMessageDialog(this,
-                    "Part Number not found. Please try again.",
-                    "Not Found", JOptionPane.WARNING_MESSAGE);
-           } else {
-                txtCurProdNo.setText(partNums[foundIndex]);
-                txtCurDesc.setText(partDescs[foundIndex]);
-                txtCurPrice.setText("" + partPrices[foundIndex]);
+           
+           //check to see if it matches a record
+           
+           
+           if(dataStore.isRecord(searchNum)){
+           //retrieve record & set display values
+               recordData=dataStore.getRecord(searchNum);
+               
+               //set txt values here
+               /*originals
+               txtCurProdNo.setText(partNums[foundIndex]);
+               txtCurDesc.setText(partDescs[foundIndex]);
+               txtCurPrice.setText("" + partPrices[foundIndex]);
+               **/
+               txtCurProdNo.setText(searchNum);
+               txtCurDesc.setText(recordData[DEC_INDEX]);
+               txtCurPrice.setText("" + recordData[PRICE_INDEX]);
+           }else{
+               JOptionPane.showMessageDialog(this,
+                   ERR_NUM_NOTFOUND_MSG,
+                    ERR_NOTFOUND_TITLE, JOptionPane.WARNING_MESSAGE);
            }
         } else {//Messages are okay for GUI per Jim L.
+            
                 JOptionPane.showMessageDialog(this,
-                    "Please enter a Part No. to search",
-                    "Entry Missing", JOptionPane.WARNING_MESSAGE);
+                    ERR_ENTER_VALUE,
+                    ERR_ENTERVALUE_TITLE, JOptionPane.WARNING_MESSAGE);
         }
 
     }//GEN-LAST:event_btnSearchActionPerformed
@@ -330,66 +352,43 @@ public class MainGUI extends javax.swing.JFrame implements ActionListener {
     }//GEN-LAST:event_btnDisplayListActionPerformed
 
     private void btnUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateActionPerformed
-        if (foundIndex == NOT_FOUND) {
-                JOptionPane.showMessageDialog(this,
-                    "Part Number not found. Please try again.",
-                    "Search Failure", JOptionPane.WARNING_MESSAGE);
-        } else {
-            partNums[foundIndex] = txtCurProdNo.getText();
-            partDescs[foundIndex] = txtCurDesc.getText();
-            partPrices[foundIndex] = Double.parseDouble(txtCurPrice.getText());
-            displayList();
+        dataStore.updateRecord(txtCurProdNo.getText(),txtCurDesc.getText(),
+            Double.parseDouble(txtCurPrice.getText()));
+        
+        if(dataStore.isUpdateSuccessful()){
+        displayList();
             JOptionPane.showMessageDialog(this,
                 "Part updated successfully!",
                 "Success Confirmation", JOptionPane.INFORMATION_MESSAGE);
+        }else{
+            JOptionPane.showMessageDialog(this,
+                    "Part Number not found. Please try again.",
+                    "Search Failure", JOptionPane.WARNING_MESSAGE);
         }
+            
     }//GEN-LAST:event_btnUpdateActionPerformed
 
     private void btnSortListActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSortListActionPerformed
-        sortList();
+        if(dataStore.sortList()){
+             displayList();
+        }else{JOptionPane.showMessageDialog(this,
+                    "Sorry, there are no items to sort", "Sort Error",
+                    JOptionPane.WARNING_MESSAGE);
+        }
     }//GEN-LAST:event_btnSortListActionPerformed
 
     private void displayList() {
         NumberFormat nf = NumberFormat.getCurrencyInstance();
         listProducts.setText(""); // clear list
         listProducts.append("Part\tDesc\t\tPrice\n====\t====\t\t=====\n");
-        for (int i = 0 ; i < emptyRow; i++) {
-            String rLine = partNums[i] + "\t"
-                    + partDescs[i] + "\t\t" + nf.format(partPrices[i]) + "\n";
+        for (int i = 0 ; i < dataStore.getEmptyRow(); i++) {
+            String rLine = dataStore.getPartNums()[i] + "\t"
+                    + dataStore.getPartDescs()[i] + "\t\t" + nf.format(dataStore.getPartPrices()[i]) + "\n";
             listProducts.append(rLine);
         }
     }
 
-    // Sort by partNumber
-    private void sortList() {
-        // Only perform the sort if we have records
-        if(emptyRow > 0) {
-            // Bubble sort routine adapted from sample in text book...
-            // Make sure the operations are peformed on all 3 arrays!
-            for(int passNum = 1; passNum < emptyRow; passNum++) {
-                for(int i = 1; i <= emptyRow-passNum; i++) {
-                    String temp = "";
-                    temp += partPrices[i-1];
-                    partPrices[i-1] = partPrices[i];
-                    partPrices[i] = Double.parseDouble(temp);
-
-                    temp = partNums[i-1];
-                    partNums[i-1] = partNums[i];
-                    partNums[i] = temp;
-
-                    temp = partDescs[i-1];
-                    partDescs[i-1] = partDescs[i];
-                    partDescs[i] = temp;
-                }
-            }
-            // Once it's sorted, display in the list box
-            displayList();
-        } else {
-            JOptionPane.showMessageDialog(this,
-                    "Sorry, there are no items to sort", "Sort Error",
-                    JOptionPane.WARNING_MESSAGE);
-        }
-    }
+   
 
     private void clearEntryFields() {
         txtNewProdNo.setText("");
