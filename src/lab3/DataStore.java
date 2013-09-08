@@ -65,26 +65,30 @@ public class DataStore {
     }
     
     public void updateRecord(String num, String des, Double price){
-        if (foundIndex == NOT_FOUND) {
-                updateSuccessful=false;
-        } else {
-            partNums[foundIndex] = num;
-            partDescs[foundIndex] = des;
-            partPrices[foundIndex] = price;
-            updateSuccessful=true;
+        //error proofing .. test for null
+        if(isRecord(num)){
+            if (foundIndex == NOT_FOUND) {
+                    updateSuccessful=false;
+            } else {
+                partNums[foundIndex] = num;
+                partDescs[foundIndex] = des;
+                partPrices[foundIndex] = price;
+                updateSuccessful=true;
+            }
         }
         
     }
     
     public void setRecord(String partNo, String partDesc, String partPrice){
-        
-        foundIndex = NOT_FOUND;//intending to move to DataStore
-        updateSuccessful=false;
+        if(!isDataFull()){
+            foundIndex = NOT_FOUND;//intending to move to DataStore
+            updateSuccessful=false;
 
             partNums[emptyRow] = partNo;
             partDescs[emptyRow] = partDesc;
             partPrices[emptyRow] = Double.parseDouble(partPrice);
             emptyRow += 1;
+        }
             
     }
     
@@ -93,7 +97,7 @@ public class DataStore {
     }
     
     public boolean isDataFull(){
-        if (getEmptyRow() > getMAX_RECS()) {
+        if (this.getEmptyRow() > this.getMAX_RECS()) {
             setDataFull();
         }
         return dataFull;
@@ -103,10 +107,11 @@ public class DataStore {
     //Search methods
     
     
-    
+    //checks for null, 0 length & checks for text match of part number 
     public boolean isRecord(String s){
         boolean rec=false;
-        
+        foundIndex=NOT_FOUND;
+        if(s!=null || s.length()>0){
          for (int i = 0; i < getPartNums().length; i++) {//move this to DataSearcher, use method call here
                 if (s.equalsIgnoreCase(getPartNums()[i])) {
                     foundIndex = i;
@@ -114,6 +119,7 @@ public class DataStore {
                     break;
                 }
             }
+        }
          
          
          

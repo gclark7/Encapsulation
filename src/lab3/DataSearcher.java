@@ -10,8 +10,8 @@ package lab3;
  */
 public class DataSearcher {
     
-    private final int NOT_FOUND = -1;
-    int foundIndex = NOT_FOUND;//moved to move to datasearcher
+    //private final int NOT_FOUND = -1;
+    //int foundIndex = NOT_FOUND;//moved to move to datasearcher
     
     
     public boolean isRecord(DataStore d, String s){

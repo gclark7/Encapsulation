@@ -34,6 +34,9 @@ public class MainGUI extends javax.swing.JFrame implements ActionListener {
     private final String ERR_NOTFOUND_TITLE="Not Found";
     private final String ERR_ENTER_VALUE="Please enter a Part No. to search";
     private final String ERR_ENTERVALUE_TITLE="Entry Missing";
+    private final String SUCCESS_PART_UPDATE="Part updated successfully!";
+    private final String SUCCESS_UPDATE_TITLE="Success Confirmation";
+    private final String EMPTY_REC_MSG="Sorry, there are no items to sort";
     
     private String partNo;
     
@@ -51,8 +54,8 @@ public class MainGUI extends javax.swing.JFrame implements ActionListener {
         initComponents();
         this.txtNewProdNo.requestFocus();
         dataStore =new DataStore();
-        dataSorter=new DataSorter();
-        dataSearcher=new DataSearcher();
+       // dataSorter=new DataSorter();
+       // dataSearcher=new DataSearcher();
     }
 
     /** This method is called from within the constructor to
@@ -291,7 +294,7 @@ public class MainGUI extends javax.swing.JFrame implements ActionListener {
                     ERR_ALL_FIELDS, ERR_ALL_FIELDS_TITLE, JOptionPane.WARNING_MESSAGE);
             this.txtNewProdNo.requestFocus();
 
-        } else if(!dataStore.isDataFull()){
+        } else if(dataStore.isDataFull()){
              //changed to getter method 9/5/2013
             JOptionPane.showMessageDialog(this, 
                     ERR_MAX_ITEM_MSG, ERR_MAX_ITEM_TITLE, JOptionPane.WARNING_MESSAGE);
@@ -309,7 +312,7 @@ public class MainGUI extends javax.swing.JFrame implements ActionListener {
 
     private void btnSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSearchActionPerformed
         String searchNum = txtSearchPartNo.getText();
-        int foundIndex=-1;
+        //int foundIndex=-1;
         int REC_SIZE=3;
         int DEC_INDEX = 1;
         int PRICE_INDEX=2;
@@ -352,19 +355,40 @@ public class MainGUI extends javax.swing.JFrame implements ActionListener {
     }//GEN-LAST:event_btnDisplayListActionPerformed
 
     private void btnUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateActionPerformed
-        dataStore.updateRecord(txtCurProdNo.getText(),txtCurDesc.getText(),
-            Double.parseDouble(txtCurPrice.getText()));
-        
-        if(dataStore.isUpdateSuccessful()){
-        displayList();
+         //partNo = this.txtNewProdNo.getText();
+        partDesc = this.txtCurDesc.getText();
+
+        try {
+            partPrice = Double.parseDouble(this.txtCurPrice.getText());
+        } catch(Exception e) {
             JOptionPane.showMessageDialog(this,
-                "Part updated successfully!",
-                "Success Confirmation", JOptionPane.INFORMATION_MESSAGE);
-        }else{
-            JOptionPane.showMessageDialog(this,
-                    "Part Number not found. Please try again.",
-                    "Search Failure", JOptionPane.WARNING_MESSAGE);
+                    ERR_NUM_MSG,ERR_NUM_TITLE, JOptionPane.WARNING_MESSAGE);
+            return;
         }
+        //use DataStore method for checking data store
+       if (partNo.length() == 0 || partDesc.length() == 0 
+                || this.txtCurPrice.getText().length() == 0)
+        {
+            JOptionPane.showMessageDialog(this, 
+                    ERR_ALL_FIELDS, ERR_ALL_FIELDS_TITLE, JOptionPane.WARNING_MESSAGE);
+            this.txtNewProdNo.requestFocus();
+
+        } 
+       
+            dataStore.updateRecord(txtCurProdNo.getText(),txtCurDesc.getText(),
+                Double.parseDouble(txtCurPrice.getText()));
+
+            if(dataStore.isUpdateSuccessful()){
+            displayList();
+                JOptionPane.showMessageDialog(this,
+                    SUCCESS_PART_UPDATE,
+                    SUCCESS_UPDATE_TITLE, JOptionPane.INFORMATION_MESSAGE);
+            }else{
+                JOptionPane.showMessageDialog(this,
+                        ERR_NUM_NOTFOUND_MSG,
+                        ERR_NOTFOUND_TITLE, JOptionPane.WARNING_MESSAGE);
+            }
+        
             
     }//GEN-LAST:event_btnUpdateActionPerformed
 
@@ -372,7 +396,7 @@ public class MainGUI extends javax.swing.JFrame implements ActionListener {
         if(dataStore.sortList()){
              displayList();
         }else{JOptionPane.showMessageDialog(this,
-                    "Sorry, there are no items to sort", "Sort Error",
+                    EMPTY_REC_MSG, ERR_NOTFOUND_TITLE,
                     JOptionPane.WARNING_MESSAGE);
         }
     }//GEN-LAST:event_btnSortListActionPerformed
@@ -388,7 +412,33 @@ public class MainGUI extends javax.swing.JFrame implements ActionListener {
         }
     }
 
-   
+   private boolean testUserInput(){
+       boolean inputGood=false;
+       
+        partNo = this.txtNewProdNo.getText();
+        partDesc = this.txtNewProdDesc.getText();
+        try {
+            partPrice = Double.parseDouble(this.txtNewProdPrice.getText());
+        } catch(Exception e) {
+            JOptionPane.showMessageDialog(this,
+                    ERR_NUM_MSG,ERR_NUM_TITLE, JOptionPane.WARNING_MESSAGE);
+            return inputGood;
+        }
+        //use DataStore method for checking data store
+       if (partNo.length() == 0 || partDesc.length() == 0 
+                || this.txtNewProdPrice.getText().length() == 0)
+        {
+            JOptionPane.showMessageDialog(this, 
+                    ERR_ALL_FIELDS, ERR_ALL_FIELDS_TITLE, JOptionPane.WARNING_MESSAGE);
+            this.txtNewProdNo.requestFocus();
+
+        } else if(!dataStore.isDataFull()){
+             //changed to getter method 9/5/2013
+            JOptionPane.showMessageDialog(this, 
+                    ERR_MAX_ITEM_MSG, ERR_MAX_ITEM_TITLE, JOptionPane.WARNING_MESSAGE);
+        } else{inputGood=true;}
+       return inputGood;
+   }
 
     private void clearEntryFields() {
         txtNewProdNo.setText("");
