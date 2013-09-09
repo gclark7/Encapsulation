@@ -43,9 +43,7 @@ public class MainGUI extends javax.swing.JFrame implements ActionListener {
     private String partDesc;
     private double partPrice;
     private DataStore dataStore;
-    private DataSorter dataSorter;
-    private DataSearcher dataSearcher;
-    
+  
 
     
 
@@ -54,8 +52,7 @@ public class MainGUI extends javax.swing.JFrame implements ActionListener {
         initComponents();
         this.txtNewProdNo.requestFocus();
         dataStore =new DataStore();
-       // dataSorter=new DataSorter();
-       // dataSearcher=new DataSearcher();
+      
     }
 
     /** This method is called from within the constructor to

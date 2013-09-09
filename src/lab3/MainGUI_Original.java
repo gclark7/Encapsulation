@@ -21,14 +21,22 @@ import javax.swing.*;
 */
 
 public class MainGUI_Original extends javax.swing.JFrame implements ActionListener {
-    private final int MAX_RECS = 10;
-    private final int NOT_FOUND = -1;
+    
 
     String partNo;
-    int foundIndex = NOT_FOUND;
+   
     private String partDesc;
     double partPrice;
-
+    
+     private final int NOT_FOUND = -1;
+    private int foundIndex = NOT_FOUND;//moved to move to datasearcher
+    private final int MAX_RECS = 10;
+    private String[] partNums = new String[MAX_RECS];//place in new class
+    private String[] partDescs = new String[MAX_RECS];
+    private double[] partPrices = new double[MAX_RECS];
+    private int emptyRow=0;
+    private boolean dataFull=false;
+    private boolean updateSuccessful=false;
     
 
     /** Creates new form MainGUI */
