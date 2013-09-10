@@ -27,7 +27,7 @@ public class GUI extends JFrame{
     private ImageIcon image;
     
     //used to create the game instance
-    private GameWorld gW;
+    private GameWorld gW;//Good planning, but Game would better control the worlds and the characters
     private String[] gameData;
     private boolean gameReady;
     

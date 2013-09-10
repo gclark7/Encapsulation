@@ -25,12 +25,13 @@ public class Employee {
 
     }
 
-    // getters & setters
+    // getters & setters // ensure every parameter is validated!!!
     public String getFirstName() {
         return firstName;
     }
 
     public void setFirstName(String firstName) {
+        //test for null, then for 0 length, then for wrong value....
         this.firstName = firstName;
     }
 

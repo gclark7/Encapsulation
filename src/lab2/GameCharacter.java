@@ -15,7 +15,9 @@ public class GameCharacter {
     private int strength;
     private int speed;
     private int points;
-    private final int DYING = 2;
+    private final int DYING = 2;//doesn't like DYING, not descriptive enough
+    //use a term that grandma can understand
+    //dyingThreshold
     
     
     
