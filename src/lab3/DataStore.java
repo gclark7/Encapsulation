@@ -65,7 +65,7 @@ public class DataStore {
     }
     
     public void updateRecord(String num, String des, Double price){
-        //error proofing .. test for null
+        //error proofing .. test for null...
         if(isRecord(num)){
             if (foundIndex == NOT_FOUND) {
                     updateSuccessful=false;
@@ -153,7 +153,7 @@ public class DataStore {
     
     //sort data
      // Sort by partNumber
-    public boolean sortList() {
+    public boolean sortList() {//utilize TreeMap check Jim's example
         boolean sorted=false;
         // Only perform the sort if we have records
         if(emptyRow > 0) {
