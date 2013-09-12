@@ -185,4 +185,16 @@ public class DataStore {
         
         return sorted;
     }
+    
+    //playing with arrays to better understand 
+    public void enlargeRecordArrays(){
+        String[] partTemp;
+        partTemp= new String[partNums.length + MAX_RECS];
+        for(String p:partNums){
+            partTemp=partNums;
+        }
+        
+        partNums=partTemp;
+        System.out.println(partNums.length);
+    }
 }

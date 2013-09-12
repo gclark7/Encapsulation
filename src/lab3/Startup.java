@@ -20,6 +20,8 @@ public class Startup {
                 (new MainGUI()).setVisible(true);
             }
         });
+        
+        
     }
 
 }
